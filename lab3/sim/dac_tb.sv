@@ -18,13 +18,13 @@ module dac_tb();
     );
 
     initial begin
-        `ifdef IVERILOG
-            $dumpfile("dac_tb.fst");
-            $dumpvars(0, dac_tb);
-        `endif
-        `ifndef IVERILOG
-            $vcdpluson;
-        `endif
+        //`ifdef IVERILOG
+        //    $dumpfile("dac_tb.fst");
+        //    $dumpvars(0, dac_tb);
+        //`endif
+        //`ifndef IVERILOG
+        //    $vcdpluson;
+        //`endif
 
         fork
             // Thread to drive code and check output
@@ -72,9 +72,9 @@ module dac_tb();
 
         $display("Test finished");
 
-        `ifndef IVERILOG
-            $vcdplusoff;
-        `endif
+        //`ifndef IVERILOG
+        //    $vcdplusoff;
+        //`endif
         $finish();
     end
 endmodule

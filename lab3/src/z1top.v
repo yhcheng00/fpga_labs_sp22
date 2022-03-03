@@ -51,4 +51,19 @@ module z1top (
         .next_sample(next_sample),
         .code(code)
     );
+    assign reset = 0;
+    assign armCMd = 0;
+    assign disarmCmd = 0;
+    assign takeoffCmd = 0;
+    assign taskComplete = 0;
+    assign sensorError = 0;
+    droneFSM d (
+        .reset(reset),
+        .clk(CLK_125MHZ_FPGA),
+        .armCmd(armCmd),
+        .disarmCmd(disarmCmd),
+        .takeoffCmd(takeoffCmd),
+        .taskComplete(taskComplete),
+        .sensorError(sensorError)
+    );
 endmodule

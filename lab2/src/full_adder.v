@@ -8,6 +8,6 @@ module full_adder (
     // Insert your RTL here to calculate the sum and carry out bits
     // Remove these assign statements once you write your own RTL
 
-    assign sum = 1'b0;
-    assign carry_out = 1'b0;
+    assign sum = (a ^ b) ^ carry_in;
+    assign carry_out = (a & b) | (b & carry_in) | (carry_in & a);
 endmodule

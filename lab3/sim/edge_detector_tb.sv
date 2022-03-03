@@ -24,13 +24,13 @@ module edge_detector_tb();
     reg [31:0] tests_failed = 0;
 
     initial begin
-        `ifdef IVERILOG
-            $dumpfile("edge_detector_tb.fst");
-            $dumpvars(0, edge_detector_tb);
-        `endif
-        `ifndef IVERILOG
-            $vcdpluson;
-        `endif
+        //`ifdef IVERILOG
+        //    $dumpfile("edge_detector_tb.fst");
+        //    $dumpvars(0, edge_detector_tb);
+        //`endif
+        //`ifndef IVERILOG
+        //    $vcdpluson;
+        //`endif
 
         fork
             // Stimulus thread
@@ -78,9 +78,9 @@ module edge_detector_tb();
             end
         join
 
-        `ifndef IVERILOG
-            $vcdplusoff;
-        `endif
+        //`ifndef IVERILOG
+        //    $vcdplusoff;
+        //`endif
         $finish();
     end
 

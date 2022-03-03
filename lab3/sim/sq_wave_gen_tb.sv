@@ -19,13 +19,13 @@ module sq_wave_gen_tb();
     integer code_file;
     integer next_sample_fetch;
     initial begin
-        `ifdef IVERILOG
-            $dumpfile("sq_wave_gen_tb.fst");
-            $dumpvars(0, sq_wave_gen_tb);
-        `endif
-        `ifndef IVERILOG
-            $vcdpluson;
-        `endif
+        //`ifdef IVERILOG
+        //    $dumpfile("sq_wave_gen_tb.fst");
+        //    $dumpvars(0, sq_wave_gen_tb);
+        //`endif
+        //`ifndef IVERILOG
+        //    $vcdpluson;
+        //`endif
 
         code_file = $fopen("codes.txt", "w");
 
@@ -45,9 +45,9 @@ module sq_wave_gen_tb();
         end
         $fclose(code_file);
 
-        `ifndef IVERILOG
-            $vcdplusoff;
-        `endif
+        //`ifndef IVERILOG
+        //    $vcdplusoff;
+        //`endif
         $finish();
     end
 endmodule
