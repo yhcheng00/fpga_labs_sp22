@@ -34,6 +34,7 @@ module uart_transmitter_tb();
     .data_in_valid(data_in_valid), // input
     .data_in_ready(data_in_ready), // output
     .serial_out(serial_out)        // output
+    //.bit_counter(bit_counter)
   );
 
   integer i, j, c;
@@ -110,13 +111,13 @@ module uart_transmitter_tb();
 
   initial begin
     #0;
-    `ifdef IVERILOG
-        $dumpfile("uart_transmitter_tb.fst");
-        $dumpvars(0, uart_transmitter_tb);
-    `endif
-    `ifndef IVERILOG
-        $vcdpluson;
-    `endif
+    //`ifdef IVERILOG
+    //    $dumpfile("uart_transmitter_tb.fst");
+    //    $dumpvars(0, uart_transmitter_tb);
+    //`endif
+    //`ifndef IVERILOG
+    //    $vcdpluson;
+    //`endif
 
     rst = 1'b1;
     cnt = 0;

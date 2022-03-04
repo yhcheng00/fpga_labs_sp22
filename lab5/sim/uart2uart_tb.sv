@@ -62,13 +62,13 @@ module uart2uart_tb();
 
     reg done = 0;
     initial begin
-        `ifdef IVERILOG
-            $dumpfile("uart2uart_tb.fst");
-            $dumpvars(0, uart2uart_tb);
-        `endif
-        `ifndef IVERILOG
-            $vcdpluson;
-        `endif
+        //`ifdef IVERILOG
+        //    $dumpfile("uart2uart_tb.fst");
+        //    $dumpvars(0, uart2uart_tb);
+        //`endif
+        //`ifndef IVERILOG
+        //    $vcdpluson;
+        //`endif
         reset = 1'b0;
         data_in = 8'd0;
         data_in_valid = 1'b0;
@@ -133,9 +133,9 @@ module uart2uart_tb();
 
         repeat (20) @(posedge clk);
         $display("Test finished");
-        `ifndef IVERILOG
-            $vcdplusoff;
-        `endif
+        //`ifndef IVERILOG
+         //   $vcdplusoff;
+        //`endif
         $finish();
     end
 endmodule
