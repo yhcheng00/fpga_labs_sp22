@@ -23,13 +23,15 @@ module uart_transmitter #(
     reg [3:0] bit_counter;
     assign data_in_ready = ~transmitting;
     wire [9:0] serial_bus;
-    assign serial_bus = {1,data_in,0};
+    reg [7:0] data_reg;
+    assign serial_bus = {1'b1,data_reg,1'b0};
     assign serial_out = transmitting? serial_bus[bit_counter] : 1;
     always @(posedge clk) begin
         if (reset) begin
             clock_counter <= 0;
             transmitting <= 0;
             bit_counter <= 0;
+            data_reg <= 0;
         end 
         else begin
             if (transmitting) begin
@@ -48,6 +50,7 @@ module uart_transmitter #(
                 end
             end
             else if (data_in_valid) begin
+                data_reg <= data_in;
                 transmitting <= 1;
                 clock_counter <= 1;
             end

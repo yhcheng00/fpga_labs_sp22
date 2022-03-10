@@ -126,13 +126,13 @@ module echo_tb();
 
   initial begin
     #0;
-    `ifdef IVERILOG
-        $dumpfile("echo_tb.fst");
-        $dumpvars(0, echo_tb);
-    `endif
-    `ifndef IVERILOG
-        $vcdpluson;
-    `endif
+    //`ifdef IVERILOG
+    //    $dumpfile("echo_tb.fst");
+    //    $dumpvars(0, echo_tb);
+    //`endif
+    //`ifndef IVERILOG
+    //    $vcdpluson;
+    //`endif
 
     rst = 1'b1;
 

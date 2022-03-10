@@ -68,13 +68,13 @@ module simple_echo_tb();
 
     reg done = 0;
     initial begin
-        `ifndef IVERILOG
-            $vcdpluson;
-        `endif
-        `ifdef IVERILOG
-            $dumpfile("simple_echo_tb.fst");
-            $dumpvars(0, simple_echo_tb);
-        `endif
+        //`ifndef IVERILOG
+        //    $vcdpluson;
+        //`endif
+        //`ifdef IVERILOG
+        //    $dumpfile("simple_echo_tb.fst");
+        //    $dumpvars(0, simple_echo_tb);
+        //`endif
         reset = 1'b0;
         data_in = 8'h41; // Represents the character 'A' in ASCII
         data_in_valid = 1'b0;
@@ -133,9 +133,9 @@ module simple_echo_tb();
 
         repeat (100) @(posedge clk);
         $display("%h/%c should have been sent and %h/%c echoed back", 8'h41, 8'h41, 8'h61, 8'h61);
-        `ifndef IVERILOG
-            $vcdplusoff;
-        `endif
+        //`ifndef IVERILOG
+        //    $vcdplusoff;
+        //`endif
         $finish();
     end
 endmodule
