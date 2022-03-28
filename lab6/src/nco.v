@@ -15,7 +15,7 @@ module nco(
     always @(posedge clk) begin
         if (rst) begin
             index <= 0;
-            current_code = 0;
+            current_code <= 0;
         end
         if (next_sample) begin
             index <= index + fcw;

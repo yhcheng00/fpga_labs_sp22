@@ -79,13 +79,13 @@ module system_tb();
     endtask
 
     initial begin
-        `ifndef IVERILOG
-            $vcdpluson;
-        `endif
-        `ifdef IVERILOG
-            $dumpfile("system_tb.fst");
-            $dumpvars(0, system_tb);
-        `endif
+        //`ifndef IVERILOG
+        //    $vcdpluson;
+        //`endif
+        //`ifdef IVERILOG
+        //    $dumpfile("system_tb.fst");
+        //    $dumpvars(0, system_tb);
+        //`endif
         data_in = 8'd0;
         data_in_valid = 1'b0;
         buttons = 0;
@@ -108,7 +108,7 @@ module system_tb();
             // FPGA checking thread
             begin
                 // Initially the fcw should be 0
-                // assert(top.nco.fcw == 0);
+                assert(top.sound_nco.fcw == 0);
 
                 // It takes `CYCLES_PER_CHAR cycles for the UART to send the
                 // FPGA one character
@@ -119,21 +119,25 @@ module system_tb();
                 repeat (10) @(posedge clk);
 
                 // Check the FCW is what you expect
-                // assert(top.nco.fcw == WHAT YOU EXPECT)
-
+                assert(top.sound_nco.fcw == 24'd17979);
+                if (top.sound_nco.fcw != 24'd17979) begin
+                    $error("Failure: Expected %d for z, got %d",24'd17979,top.sound_nco.fcw);
+                end
                 // Wait for the next note to begin playing
                 // recall note_length = 1/5th of a second by default
                 repeat (`CYCLES_PER_SECOND / 5 + 10) @(posedge clk);
 
                 // Check the FCW is what you expect
-                // assert(top.nco.fcw == WHAT YOU EXPECT)
-
+                assert(top.sound_nco.fcw == 24'd20180);
+                if (top.sound_nco.fcw != 24'd20180) begin
+                    $error("Failure: Expected %d for x, got %d",24'd20180,top.sound_nco.fcw);
+                end
                 // TODO: add more stimulus and assertions, adjust note_length
             end
         join
-        `ifndef IVERILOG
-            $vcdplusoff;
-        `endif
+        //`ifndef IVERILOG
+        //    $vcdplusoff;
+        //`endif
         $finish();
     end
 
