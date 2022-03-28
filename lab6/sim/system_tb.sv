@@ -104,6 +104,16 @@ module system_tb();
                 ua_send("z");
                 ua_send("x");
                 ua_send("c");
+                repeat (`CYCLES_PER_SECOND) @(posedge clk);
+                buttons[0] = 1;
+                repeat (100) @(posedge clk); #1;
+                buttons[0] = 0;
+                ua_send("v");
+                repeat (`CYCLES_PER_SECOND) @(posedge clk);
+                buttons[1] = 1;
+                repeat (100) @(posedge clk); #1;
+                buttons[1] = 0;
+                repeat (`CYCLES_PER_SECOND) @(posedge clk);
             end
             // FPGA checking thread
             begin
@@ -133,6 +143,22 @@ module system_tb();
                     $error("Failure: Expected %d for x, got %d",24'd20180,top.sound_nco.fcw);
                 end
                 // TODO: add more stimulus and assertions, adjust note_length
+                repeat (`CYCLES_PER_SECOND / 5 + 10) @(posedge clk);
+                if (top.sound_nco.fcw != 24'd22652) begin
+                    $error("Failure: Expected %d for c, got %d",24'd22652,top.sound_nco.fcw);
+                end
+                repeat (3*`CYCLES_PER_SECOND / 5) @(posedge clk);
+                if (top.sound_nco.fcw != 24'd0) begin
+                    $error("Failure: Expected %d for no character, got %d",24'd0,top.sound_nco.fcw);
+                end
+                repeat (2*`CYCLES_PER_SECOND / 5) @(posedge clk);
+                if (top.sound_nco.fcw != 24'd23999) begin
+                    $error("Failure: Expected %d for v, got %d",24'd23999,top.sound_nco.fcw);
+                end
+                repeat (2*`CYCLES_PER_SECOND / 5) @(posedge clk);
+                if (top.sound_nco.fcw != 24'd0) begin
+                    $error("Failure: Expected %d for silence, got %d",24'd0,top.sound_nco.fcw);
+                end
             end
         join
         //`ifndef IVERILOG

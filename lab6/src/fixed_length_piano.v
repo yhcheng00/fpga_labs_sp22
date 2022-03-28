@@ -22,8 +22,8 @@ module fixed_length_piano #(
     wire [23:0] data;
     wire [7:0] last_address;
     wire [7:0] address;
-    reg [$clog2(CYCLES_PER_SECOND):0] note_length = CYCLES_PER_SECOND/5;
-    reg [$clog2(CYCLES_PER_SECOND):0] counter;
+    reg [$clog2(CYCLES_PER_SECOND)*2:0] note_length = CYCLES_PER_SECOND/5;
+    reg [$clog2(CYCLES_PER_SECOND)*2:0] counter;
     reg wr_en_reg = 0;
     reg playing = 0;
     assign fcw = ~playing? 0 : data;
@@ -36,7 +36,7 @@ module fixed_length_piano #(
     assign rd_en = ~empty && counter == 0;
     assign address = dout;
     always @(posedge clk) begin
-        wr_en_reg <= ~ua_rx_empty;
+        wr_en_reg <= ~ua_rx_empty & ~full;
         if (rst) begin
             note_length <= CYCLES_PER_SECOND/5;
             counter <= 0;
@@ -44,10 +44,16 @@ module fixed_length_piano #(
             playing <= 0;
         end
         else begin
+            if (buttons[0]) begin
+                note_length <= note_length << 1;
+            end
+            if (buttons[1]) begin
+                note_length <= note_length >> 1;
+            end
             if (rd_en) begin
                 playing <= 1;
             end
-            if (counter == note_length-1) begin
+            if (counter >= note_length-1) begin
                 counter <= 0;
                 if (empty) begin
                     playing <= 0;
