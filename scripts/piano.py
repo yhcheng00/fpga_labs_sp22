@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from pynput.keyboard import Key, Listener
 import os
 import serial

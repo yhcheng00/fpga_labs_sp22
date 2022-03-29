@@ -43,15 +43,21 @@ module z1top #(
     wire [7:0] data_out;
     wire data_in_valid, data_in_ready, data_out_valid, data_out_ready;
     wire ua_tx_wr_en, ua_tx_rd_en, ua_tx_full, ua_tx_empty, ua_rx_wr_en, ua_rx_rd_en, ua_rx_full, ua_rx_empty, next_sample;
-    wire [7:0] ua_tx_din, ua_tx_dout, ua_rx_din, ua_rx_dout;
-    wire [23:0] fcw;
+    wire [7:0] ua_tx_din, ua_tx_din1, ua_tx_din2, ua_tx_dout, ua_rx_din, ua_rx_dout;
+    wire [23:0] fcw, fcw1, fcw2;
     wire [9:0] code;
+    wire [5:0] LEDS1, LEDS2;
     assign ua_tx_rd_en = data_in_ready;
     assign data_in_valid = ~(data_in_ready && ua_tx_empty);
     assign data_in = ua_tx_dout;
     assign ua_rx_wr_en = data_out_valid;
     assign data_out_ready = ~ua_rx_full;
     assign ua_rx_din = data_out;
+    assign ua_tx_din = ~switches_sync[1]? ua_tx_din1 : ua_tx_din2;
+    assign ua_tx_wr_en = ~switches_sync[1]? ua_tx_wr_en1 : ua_tx_wr_en2;
+    assign ua_rx_rd_en = ~switches_sync[1]? ua_rx_rd_en1: ua_rx_rd_en2;
+    assign fcw = ~switches_sync[1]? fcw1 : fcw2;
+    assign LEDS = ~switches_sync[1]? LEDS1 : LEDS2;
     // This UART is on the FPGA and communicates with your desktop
     // using the FPGA_SERIAL_TX, and FPGA_SERIAL_RX signals. The ready/valid
     // interface for this UART is used on the FPGA design.
@@ -73,18 +79,31 @@ module z1top #(
 
     //// TODO: Instantiate the UART FIFOs, nco, dac, and piano
     
-    fixed_length_piano #(.CYCLES_PER_SECOND(CYCLES_PER_SECOND)) test_piano (
+    fixed_length_piano #(.CYCLES_PER_SECOND(CYCLES_PER_SECOND)) fixed_piano (
         .clk(CLK_125MHZ_FPGA),
         .rst(reset),
         .buttons(buttons_pressed),
-        .leds(LEDS),
-        .ua_tx_din(ua_tx_din),
-        .ua_tx_wr_en(ua_tx_wr_en),
+        .leds(LEDS1),
+        .ua_tx_din(ua_tx_din1),
+        .ua_tx_wr_en(ua_tx_wr_en1),
         .ua_tx_full(ua_tx_full),
         .ua_rx_dout(ua_rx_dout),
         .ua_rx_empty(ua_rx_empty),
-        .ua_rx_rd_en(ua_rx_rd_en),
-        .fcw(fcw)
+        .ua_rx_rd_en(ua_rx_rd_en1),
+        .fcw(fcw1)
+    );
+    variable_length_piano variable_piano (
+        .clk(CLK_125MHZ_FPGA),
+        .rst(reset),
+        .buttons(buttons_pressed),
+        .leds(LEDS2),
+        .ua_tx_din(ua_tx_din2),
+        .ua_tx_wr_en(ua_tx_wr_en2),
+        .ua_tx_full(ua_tx_full),
+        .ua_rx_dout(ua_rx_dout),
+        .ua_rx_empty(ua_rx_empty),
+        .ua_rx_rd_en(ua_rx_rd_en2),
+        .fcw(fcw2)
     );
     fifo tx_fifo (
         .clk(CLK_125MHZ_FPGA),
