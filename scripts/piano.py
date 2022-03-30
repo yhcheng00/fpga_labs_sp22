@@ -7,7 +7,7 @@ if os.name == 'nt':
     print('Windows machine!')
     ser = serial.Serial()
     ser.baudrate = 115200
-    ser.port = 'COM6' # CHANGE THIS COM PORT
+    ser.port = 'COM3' # CHANGE THIS COM PORT
     ser.open()
 else:
     print('Not windows machine!')
